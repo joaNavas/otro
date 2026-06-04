@@ -17,6 +17,10 @@ public class Juego extends InterfaceJuego
 
 	private int estado = MENU;
 	// game over 
+	//victoria
+	private int castilloX;
+	private int castilloY;
+	private boolean victoria;
 	
 	// El objeto Entorno que controla el tiempo y otros
 	private Entorno entorno;
@@ -30,8 +34,8 @@ public class Juego extends InterfaceJuego
 	//JUGADOR
 	private Princesa princesa;
 
-	//VIDAS
-	private vidas vidas;
+	
+	
 	//Camara
 	private int camaraX;
 	
@@ -64,9 +68,7 @@ public class Juego extends InterfaceJuego
 		
         // posicion inicial jugador
 		this.princesa = new Princesa();
-		// vidas
-		this.vidas = new vidas(3);
-        // cámara
+		 // cámara
         this.camaraX = 0;
         
         generarMapa();
@@ -218,11 +220,11 @@ public class Juego extends InterfaceJuego
 		        320
 		    );
 		}
+
 		
 		public void reiniciarJuego() {
 
-		    vidas = new vidas(3);
-
+		   
 		    princesa = new Princesa();
 
 		    camaraX = 0;
@@ -338,6 +340,9 @@ public class Juego extends InterfaceJuego
 	                if(distancia > 40) {
 	                    inicioDeIsla = true;
 	                }
+	                this.castilloX = 2000;
+	                this.castilloY = 540;
+	                this.victoria = false;
 	            }
 
 	            if(inicioDeIsla) {
@@ -371,6 +376,9 @@ public class Juego extends InterfaceJuego
 
 	                indiceEnemigo++;
 	            }
+	            this.castilloX = 8000;
+                this.castilloY = 540;
+                this.victoria = false;
 	        }
 		}
 		
@@ -387,8 +395,7 @@ public class Juego extends InterfaceJuego
 
 		    princesa = new Princesa();
 
-		    vidas = new vidas(3);
-
+		    
 		    camaraX = 0;
 
 		    generarMapa();
@@ -403,6 +410,20 @@ public class Juego extends InterfaceJuego
 	 * (ver el enunciado del TP para mayor detalle).
 	 */
 	public void tick() {
+		if (victoria) {
+
+		    entorno.escribirTexto("¡GANASTE!", 320, 250);
+
+		    entorno.escribirTexto("LLEGASTE AL CASTILLO", 250, 320);
+
+		    entorno.escribirTexto("ESC = SALIR", 320, 380);
+
+		    if (entorno.sePresiono(entorno.TECLA_ESCAPE)) {
+		        System.exit(0);
+		    }
+
+		    return;
+		}
 
 		if (estado == MENU) {
 
@@ -415,7 +436,7 @@ public class Juego extends InterfaceJuego
 		
 		
 		
-		if (vidas.getCantidad() <= 0) {
+		if (princesa.getVidas() <= 0) {
 
 		    estado = GAME_OVER;
 		}
@@ -750,19 +771,18 @@ public class Juego extends InterfaceJuego
     
         // PERDER VIDA SI CAE
 
-	 	if (this.princesa.getY() > 700) {
+        if (this.princesa.getY() > 700) {
 
-	 	    vidas.perderVida();
+            this.princesa.perderVida();
 
-	 	    this.princesa = new Princesa();
+            this.princesa.setX(400);
+            this.princesa.setY(300);
 
-	 	   this.princesa.setX(400);
-	 	   this.princesa.setY(300);
+            camaraX = 0;
+        }
 
 
-
-	 	    camaraX = 0;
-	 	}
+	 	   
 	    
         // CAMARA QUE SIGUE
         
@@ -786,6 +806,15 @@ public class Juego extends InterfaceJuego
         		}
         	}
         }
+        //DIBUJAR CASTILLO
+        entorno.dibujarRectangulo(
+        	    castilloX - camaraX,
+        	    castilloY,
+        	    80,
+        	    120,
+        	    0,
+        	    Color.GRAY
+        	);
         
         
 
@@ -795,8 +824,8 @@ public class Juego extends InterfaceJuego
         this.princesa.dibujarPrincesa(entorno, camaraX);
 
         entorno.escribirTexto(
-        	    "Vidas: " + vidas.getCantidad(),
-        	    20,
+        	    "Vidas: " + princesa.getVidas(),
+        	    30,
         	    30
         	);
     

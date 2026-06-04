@@ -17,6 +17,7 @@ public class Princesa {
 	private Image quieta;
 	private Image moverDerecha;
 	private Image moverIzquierda;
+	private int vidas;
 	
 	
 	public Princesa() {
@@ -24,6 +25,8 @@ public class Princesa {
 		this.velocidadY = 0;
 		this.angulo = 0;
 		this.totalSaltos = 0;
+		this.vidas = 3;
+
 		sprite = new ImageIcon("src/moverder.gif").getImage();
 		quieta = new ImageIcon("src/quieta.gif").getImage();
 		moverDerecha = new ImageIcon("src/moverder.gif").getImage();
@@ -60,6 +63,9 @@ public class Princesa {
 				this.totalSaltos ++;
 			}
 		}
+	}
+	public int getVidas() {
+	    return this.vidas;
 	}
 
 	public int getTotalSaltos() {
@@ -126,6 +132,11 @@ public class Princesa {
 	        area.y,
 	        0
 	    );
+	}
+	public void perderVida() {
+	    if (this.vidas > 0) {
+	        this.vidas--;
+	    }
 	}
 	
 }
